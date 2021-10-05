@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './app/layout/style.css';
 import App from './app/layout/App';
 import reportWebVitals from './reportWebVitals';
+import 'semantic-ui-css/semantic.min.css'
 
 
 const rootEl = document.getElementById('root')
@@ -16,7 +17,7 @@ function render(){
 }
 
 if(module.hot) {
-  module.hot.accept("./layout/App.js", function(){
+  module.hot.accept("./app/layout/App.js", function(){
     setTimeout(render)
   })
 }
