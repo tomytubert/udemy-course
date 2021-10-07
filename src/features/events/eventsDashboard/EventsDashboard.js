@@ -1,24 +1,37 @@
-import React,{useState} from 'react';
-import EventsList from './EventsList';
-import EventsForm from "../eventsForm/EventsForm";
-import {sampleData} from "../../../app/api/sampleData";
+import React, { useState } from "react";
+import EventsList from "./EventsList";
+import { sampleData } from "../../../app/api/sampleData";
 
-const { Grid } = require("semantic-ui-react")
+const { Grid } = require("semantic-ui-react");
 
-const EventsDashboard = ({formOpen,setFormOpen}) => {
-    const [events, setEvents] = useState(sampleData);
-    return ( 
+const EventsDashboard = () => {
+  const [events, setEvents] = useState(sampleData);
+
+  // const handleCreateEvent = (event) => {
+  //   setEvents([...events, event]);
+  // };
+
+  // const handleUpdateEvent = (updatedEvent) => {
+  //   setEvents(events.map(event => { if(event.id === updatedEvent.id){return updatedEvent }else{return event}}))
+  //   setSelectedEvent(null);
+  // }
+
+  const handleDeletEvent = (eventId) => {
+      setEvents(events.filter(event => event.id !== eventId))
+  }
+
+  return (
     <>
-        <Grid>
-            <Grid.Column width={10}>
-                <EventsList events={events}/>
-            </Grid.Column>
-            <Grid.Column width={6}>
-                {formOpen && <EventsForm setFormOpen={setFormOpen}/>}
-            </Grid.Column>
-        </Grid>
-    </> 
-    );
-}
- 
+      <Grid>
+        <Grid.Column width={10}>
+          <EventsList events={events} handleDeletEvent={handleDeletEvent} />
+        </Grid.Column>
+        <Grid.Column width={6}>
+         <h3>Event Filters</h3>
+        </Grid.Column>
+      </Grid>
+    </>
+  );
+};
+
 export default EventsDashboard;

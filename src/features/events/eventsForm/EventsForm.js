@@ -1,36 +1,114 @@
-import React from 'react';
-import { Segment,Header,Form, Button } from 'semantic-ui-react';
+import React, { useState } from "react";
+import { Segment, Header, Form, Button } from "semantic-ui-react";
+import ciud from "cuid";
+import { Link } from "react-router-dom";
 
-const EventForm = ({setFormOpen}) => {
-    return ( 
-        <>
-            <Segment clearing>
-                <Header content="Create new Event" />
-                <Form>
-                    <Form.Field>
-                        <input type="text" placeholder="Event title"/>
-                    </Form.Field>
-                    <Form.Field>
-                        <input type="text" placeholder="Category"/>
-                    </Form.Field>
-                    <Form.Field>
-                        <input type="text" placeholder="Description"/>
-                    </Form.Field>
-                    <Form.Field>
-                        <input type="text" placeholder="City"/>
-                    </Form.Field>
-                    <Form.Field>
-                        <input type="text" placeholder="Venue"/>
-                    </Form.Field>
-                    <Form.Field>
-                        <input type="text" placeholder="Date"/>
-                    </Form.Field>
-                    <Button type="submit" floated="right" positive content="Submit"/>
-                    <Button type="submit" floated="right" onClick={() => setFormOpen(false)} content="Cancel"/>
-                </Form>
-            </Segment>
-        </>
-     );
-}
- 
+const EventForm = ({
+  setFormOpen,
+  setEvents,
+  handleCreateEvent,
+  selectedEvent,
+  handleUpdateEvent,
+}) => {
+  const initialState = selectedEvent ?? {
+    title: "",
+    category: "",
+    description: "",
+    city: "",
+    venue: "",
+    date: "",
+  };
+
+  const [values, setValues] = useState(initialState);
+
+  const handleChange = ({ target }) => {
+    setValues({ ...values, [target.name]: target.value });
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    selectedEvent
+      ? handleUpdateEvent({ ...selectedEvent, ...values })
+      : handleCreateEvent({
+          ...values,
+          id: ciud(),
+          hostedBy: "Bob",
+          attendees: [],
+        });
+    setFormOpen(false);
+  };
+
+  return (
+    <>
+      <Segment clearing>
+        <Header
+          content={selectedEvent ? "Editing Event" : "Create new Event"}
+        />
+        <Form onSubmit={handleSubmit}>
+          <Form.Field>
+            <input
+              type="text"
+              value={values.title}
+              placeholder="Event title"
+              name="title"
+              onChange={handleChange}
+            />
+          </Form.Field>
+          <Form.Field>
+            <input
+              type="text"
+              value={values.category}
+              placeholder="Category"
+              name="category"
+              onChange={handleChange}
+            />
+          </Form.Field>
+          <Form.Field>
+            <input
+              type="text"
+              value={values.description}
+              placeholder="Description"
+              name="description"
+              onChange={handleChange}
+            />
+          </Form.Field>
+          <Form.Field>
+            <input
+              type="text"
+              value={values.city}
+              placeholder="City"
+              name="city"
+              onChange={handleChange}
+            />
+          </Form.Field>
+          <Form.Field>
+            <input
+              type="text"
+              value={values.venue}
+              placeholder="Venue"
+              name="venue"
+              onChange={handleChange}
+            />
+          </Form.Field>
+          <Form.Field>
+            <input
+              type="date"
+              value={values.date}
+              placeholder="Date"
+              name="date"
+              onChange={handleChange}
+            />
+          </Form.Field>
+          <Button type="submit" floated="right" positive content="Submit" />
+          <Button
+            as={Link} to={"/events"}
+            type="submit"
+            floated="right"
+            content="Cancel"
+          />
+        </Form>
+      </Segment>
+    </>
+  );
+};
+
 export default EventForm;
