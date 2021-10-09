@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import { Segment, Header, Form, Button } from "semantic-ui-react";
 import ciud from "cuid";
 import { Link } from "react-router-dom";
-
-const EventForm = ({
-  setFormOpen,
-  setEvents,
-  handleCreateEvent,
-  selectedEvent,
-  handleUpdateEvent,
-}) => {
+import { useSelector, useDispatch } from "react-redux";
+import { updateEvent, createEvent } from "../eventActions";
+const EventForm = ({ match, history }) => {
+  const dispatch = useDispatch();
+  const selectedEvent = useSelector((state) =>
+    state.event.events.find((e) => e.id === match.params.id)
+  );
   const initialState = selectedEvent ?? {
     title: "",
     category: "",
@@ -27,14 +26,16 @@ const EventForm = ({
   const handleSubmit = (e) => {
     e.preventDefault();
     selectedEvent
-      ? handleUpdateEvent({ ...selectedEvent, ...values })
-      : handleCreateEvent({
-          ...values,
-          id: ciud(),
-          hostedBy: "Bob",
-          attendees: [],
-        });
-    setFormOpen(false);
+      ? dispatch(updateEvent({ ...selectedEvent, ...values }))
+      : dispatch(
+          createEvent({
+            ...values,
+            id: ciud(),
+            hostedBy: "Bob",
+            attendees: [],
+          })
+        );
+    history.push("/events");
   };
 
   return (
@@ -100,7 +101,8 @@ const EventForm = ({
           </Form.Field>
           <Button type="submit" floated="right" positive content="Submit" />
           <Button
-            as={Link} to={"/events"}
+            as={Link}
+            to={"/events"}
             type="submit"
             floated="right"
             content="Cancel"

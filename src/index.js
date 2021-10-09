@@ -5,15 +5,24 @@ import App from "./app/layout/App";
 import reportWebVitals from "./reportWebVitals";
 import "semantic-ui-css/semantic.min.css";
 import { BrowserRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import { configStore } from "./app/store/configStore";
+import ScrollToTop from "./app/layout/ScrollToTop";
+
+
+const store = configStore()
 
 const rootEl = document.getElementById("root");
 function render() {
   ReactDOM.render(
-    <BrowserRouter>
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
-    </BrowserRouter>,
+    <Provider store={store}>
+      <BrowserRouter>
+        <React.StrictMode>
+        <ScrollToTop />
+          <App />
+        </React.StrictMode>
+      </BrowserRouter>
+    </Provider>,
     rootEl
   );
 }
